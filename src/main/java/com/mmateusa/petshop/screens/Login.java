@@ -124,13 +124,16 @@ public class Login extends javax.swing.JFrame {
                 .setParameter("senha", new String(passInpt.getPassword()))
                 .setMaxResults(1)
                 .getResultList();
-        if(u.isEmpty()){
+        if (u.isEmpty()) {
             errLbl.setText("Usuário/Senha errados");
-        }else if(u.get(0).getCargo() == Cargo.Administrador){
-            AdmDashboard admDashboard = new AdmDashboard(this);
-            admDashboard.setVisible(true);
-            this.setVisible(false);
+            return;
         }
+        errLbl.setText("");
+        passInpt.setText("");
+       
+        AdmDashboard admDashboard = new AdmDashboard(this, u.get(0).getCargo(), u.get(0));
+        admDashboard.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_entrarBtnActionPerformed
 
     /**

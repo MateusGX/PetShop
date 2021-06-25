@@ -6,8 +6,18 @@
 package com.mmateusa.petshop.screens;
 
 import com.mmateusa.petshop.Petshop;
-import com.mmateusa.petshop.dao.Usuarios;
+import com.mmateusa.petshop.dao.*;
+import com.mmateusa.petshop.screens.forms.AnimalForm;
+import com.mmateusa.petshop.screens.forms.ServicoForm;
+import com.mmateusa.petshop.screens.forms.UsuarioForm;
+import com.mmateusa.petshop.screens.forms.VendaForm;
+import com.mmateusa.petshop.utils.Cargo;
+import com.mmateusa.petshop.utils.FormaPagamento;
+import com.mmateusa.petshop.utils.VendaStatus;
+import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -21,11 +31,31 @@ public class AdmDashboard extends javax.swing.JFrame {
      * Creates new form AdmDashboard
      */
     private Login login;
+    private Cargo cargo;
+    private Usuarios user;
 
-    public AdmDashboard(Login login) {
+    public AdmDashboard(Login login, Cargo cargo, Usuarios user) {
         this.login = login;
+        this.cargo = cargo;
+        this.user = user;
         initComponents();
-        getUsers();
+        if (cargo == Cargo.Cliente) {
+            dashboard.remove(0);
+            dashboard.remove(1);
+            dashboard.remove(1);
+            dashboard.remove(1);
+            serAddBtn.setVisible(false);
+        } else if (cargo == Cargo.Secretaria) {
+            dashboard.remove(3);
+        }
+
+        if (cargo == Cargo.Secretaria || cargo == Cargo.Administrador) {
+            getUsers();
+            getAnimals();
+            getAnimalsTypes();
+            getVendas();
+        }
+        getServicos();
     }
 
     public AdmDashboard() {
@@ -41,13 +71,31 @@ public class AdmDashboard extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        dashboard = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         userTable = new javax.swing.JTable();
+        jButton2 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        servicosTable = new javax.swing.JTable();
+        jLabel4 = new javax.swing.JLabel();
+        serAddBtn = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        vendasTable = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        animaisTable = new javax.swing.JTable();
+        jButton3 = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tiposTable = new javax.swing.JTable();
+        jButton4 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
 
@@ -59,14 +107,14 @@ public class AdmDashboard extends javax.swing.JFrame {
             }
         });
 
-        jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.LEFT);
+        dashboard.setTabPlacement(javax.swing.JTabbedPane.LEFT);
 
         userTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "Cargo", "Nome", "E-Mail", "CPF", "Telefone"
+                "ID", "Cargo", "Nome", "E-mail", "CPF", "Telefone"
             }
         ) {
             Class[] types = new Class [] {
@@ -84,7 +132,26 @@ public class AdmDashboard extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        userTable.getTableHeader().setReorderingAllowed(false);
+        userTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                userTableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(userTable);
+        if (userTable.getColumnModel().getColumnCount() > 0) {
+            userTable.getColumnModel().getColumn(5).setHeaderValue("Telefone");
+        }
+
+        jButton2.setText("+");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel3.setText("Usuários:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -92,57 +159,295 @@ public class AdmDashboard extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 869, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 838, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(79, Short.MAX_VALUE)
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Usuários", jPanel1);
+        dashboard.addTab("Usuários", jPanel1);
+
+        servicosTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Nome", "Descrição", "Preço", "Recomendado:"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        servicosTable.getTableHeader().setReorderingAllowed(false);
+        servicosTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                servicosTableMouseClicked(evt);
+            }
+        });
+        jScrollPane4.setViewportView(servicosTable);
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel4.setText("Serviços:");
+
+        serAddBtn.setText("+");
+        serAddBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                serAddBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 889, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 838, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(serAddBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 517, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(serAddBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Serviços", jPanel4);
+        dashboard.addTab("Serviços", jPanel4);
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel5.setText("Vendas:");
+
+        vendasTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Data", "Cliente", "Animal", "Status", "Total"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        vendasTable.getTableHeader().setReorderingAllowed(false);
+        vendasTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                vendasTableMouseClicked(evt);
+            }
+        });
+        jScrollPane5.setViewportView(vendasTable);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 889, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 838, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 517, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(19, Short.MAX_VALUE)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Vendas", jPanel2);
+        dashboard.addTab("Vendas", jPanel2);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 889, Short.MAX_VALUE)
+            .addGap(0, 858, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 517, Short.MAX_VALUE)
+            .addGap(0, 495, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Relatórios", jPanel3);
+        dashboard.addTab("Relatórios", jPanel3);
+
+        animaisTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Nome", "Tamanho", "Peso", "Idade", "Tipo", "Dono"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        animaisTable.getTableHeader().setReorderingAllowed(false);
+        animaisTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                animaisTableMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(animaisTable);
+        if (animaisTable.getColumnModel().getColumnCount() > 0) {
+            animaisTable.getColumnModel().getColumn(5).setHeaderValue("Telefone");
+            animaisTable.getColumnModel().getColumn(6).setHeaderValue("Dono");
+        }
+
+        jButton3.setText("+");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        tiposTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Nome"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tiposTable.getTableHeader().setReorderingAllowed(false);
+        tiposTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tiposTableMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(tiposTable);
+
+        jButton4.setText("+");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel1.setText("Tipos:");
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel2.setText("Animais:");
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(365, 365, 365)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(75, 75, 75)
+                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        dashboard.addTab("Animais", jPanel6);
 
         jButton1.setText("Sair");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -158,27 +463,27 @@ public class AdmDashboard extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jButton1)
-                .addContainerGap(828, Short.MAX_VALUE))
+                .addContainerGap(797, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jButton1)
-                .addContainerGap(483, Short.MAX_VALUE))
+                .addContainerGap(461, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Conta", jPanel5);
+        dashboard.addTab("Conta", jPanel5);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addComponent(dashboard)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(dashboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -194,9 +499,145 @@ public class AdmDashboard extends javax.swing.JFrame {
         login.setVisible(true);
     }//GEN-LAST:event_formWindowClosed
 
-    private void getUsers() {
-        DefaultTableModel model = (DefaultTableModel) userTable.getModel();
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        JDialog dialog = new JDialog(this, "Criar usuário", true);
+        UsuarioForm u = new UsuarioForm(this, dialog, this.cargo);
+        dialog.getContentPane().add(u);
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void userTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userTableMouseClicked
+        int index = userTable.getSelectedRow();
+        TableModel model = userTable.getModel();
+        if (evt.getClickCount() == 2) {
+            int result = JOptionPane.showOptionDialog(this, "Você deseja excluir este usuário?", "Confirmação de exclusão", JOptionPane.WARNING_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{"Confirmar", "Cancelar"}, "Confirmar");
+            if (result == 0) {
+                Petshop.entityManager.getTransaction().begin();
+                Usuarios u = Petshop.entityManager.find(Usuarios.class, model.getValueAt(index, 0));
+                Petshop.entityManager.remove(u);
+                Petshop.entityManager.getTransaction().commit();
+                getUsers();
+            }
+        }
+    }//GEN-LAST:event_userTableMouseClicked
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        JDialog dialog = new JDialog(this, "Criar animal", true);
+        AnimalForm u = new AnimalForm(this, dialog);
+        dialog.getContentPane().add(u);
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        String tipo = JOptionPane.showInputDialog(this, "Digite um nome para esse tipo: ", "Criação de tipo", JOptionPane.QUESTION_MESSAGE);
+        if (tipo == null || tipo.isBlank()) {
+            return;
+        }
+
+        Petshop.entityManager.getTransaction().begin();
+        TiposAnimais ta = new TiposAnimais(tipo);
+        Petshop.entityManager.persist(ta);
+        Petshop.entityManager.getTransaction().commit();
+        getAnimalsTypes();
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void tiposTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tiposTableMouseClicked
+        int index = tiposTable.getSelectedRow();
+        TableModel model = tiposTable.getModel();
+        if (evt.getClickCount() == 2) {
+            int result = JOptionPane.showOptionDialog(this, "Você deseja excluir este tipo?", "Confirmação de exclusão", JOptionPane.WARNING_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{"Confirmar", "Cancelar"}, "Confirmar");
+            if (result == 0) {
+                Petshop.entityManager.getTransaction().begin();
+                TiposAnimais ta = Petshop.entityManager.find(TiposAnimais.class, model.getValueAt(index, 0));
+                Petshop.entityManager.remove(ta);
+                Petshop.entityManager.getTransaction().commit();
+                getAnimalsTypes();
+            }
+        }
+    }//GEN-LAST:event_tiposTableMouseClicked
+
+    private void animaisTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_animaisTableMouseClicked
+        int index = animaisTable.getSelectedRow();
+        TableModel model = animaisTable.getModel();
+        if (evt.getClickCount() == 2) {
+            int result = JOptionPane.showOptionDialog(this, "Você deseja excluir este animal?", "Confirmação de exclusão", JOptionPane.WARNING_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{"Confirmar", "Cancelar"}, "Confirmar");
+            if (result == 0) {
+                Petshop.entityManager.getTransaction().begin();
+                Animais a = Petshop.entityManager.find(Animais.class, model.getValueAt(index, 0));
+                Petshop.entityManager.remove(a);
+                Petshop.entityManager.getTransaction().commit();
+                getAnimals();
+            }
+        }
+    }//GEN-LAST:event_animaisTableMouseClicked
+
+    private void serAddBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serAddBtnActionPerformed
+        JDialog dialog = new JDialog(this, "Criar serviço", true);
+        ServicoForm u = new ServicoForm(this, dialog);
+        dialog.getContentPane().add(u);
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_serAddBtnActionPerformed
+
+    private void servicosTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_servicosTableMouseClicked
+        int index = servicosTable.getSelectedRow();
+        TableModel model = servicosTable.getModel();
+        if (evt.getClickCount() == 2) {
+            if (cargo == Cargo.Cliente) {
+                List<Object> animals = new ArrayList<>();
+                List<Animais> animais = Petshop.entityManager.createQuery("SELECT a FROM Animais a WHERE a.cliente = :cliente").setParameter("cliente", user).getResultList();
+                for (Animais a : animais) {
+                    animals.add(a.getId() + "-" + a.getNome());
+                }
+                if (animals.size() > 0) {
+                    String option = (String) JOptionPane.showInputDialog(this, "Selecione o animal para o serviço: ", "Seleção de animal", JOptionPane.QUESTION_MESSAGE, null, animals.toArray(), animals.get(0));
+                    Animais animal = Petshop.entityManager.find(Animais.class, Integer.parseInt(option.split("-")[0]));
+                    Servicos servico = Petshop.entityManager.find(Servicos.class, model.getValueAt(index, 0));
+                    Vendas v = new Vendas(VendaStatus.EmAndamento, null, null, user, servico, null, animal, servico.getPreco());
+                    Petshop.entityManager.getTransaction().begin();
+                    Petshop.entityManager.persist(v);
+                    Petshop.entityManager.getTransaction().commit();
+                    JOptionPane.showConfirmDialog(this, "Compra aguardando finalização!", "Finalização", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showConfirmDialog(this, "Sem animais cadastrados", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                int result = JOptionPane.showOptionDialog(this, "Você deseja excluir este serviço?", "Confirmação de exclusão", JOptionPane.WARNING_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{"Confirmar", "Cancelar"}, "Confirmar");
+                if (result == 0) {
+                    Petshop.entityManager.getTransaction().begin();
+                    Servicos s = Petshop.entityManager.find(Servicos.class, model.getValueAt(index, 0));
+                    Petshop.entityManager.remove(s);
+                    Petshop.entityManager.getTransaction().commit();
+                    getAnimals();
+                }
+            }
+        }
+    }//GEN-LAST:event_servicosTableMouseClicked
+
+    private void vendasTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_vendasTableMouseClicked
+        int index = vendasTable.getSelectedRow();
+        TableModel model = vendasTable.getModel();
+        if (evt.getClickCount() == 2) {
+            Vendas v = Petshop.entityManager.find(Vendas.class, model.getValueAt(index, 0));
+            if (v.getStatus() == VendaStatus.EmAndamento) {
+                JDialog dialog = new JDialog(this, "Finalizar venda", true);
+                VendaForm vf = new VendaForm((int) model.getValueAt(index, 0), user, this, dialog);
+                dialog.getContentPane().add(vf);
+                dialog.pack();
+                dialog.setLocationRelativeTo(this);
+                dialog.setVisible(true);
+            }
+        }
+    }//GEN-LAST:event_vendasTableMouseClicked
+
+    public void getUsers() {
+        DefaultTableModel model = (DefaultTableModel) userTable.getModel();
+        model.setRowCount(0);
         List<Usuarios> u = Petshop.entityManager.createQuery("SELECT u FROM Usuarios u").getResultList();
         for (int i = 0; i < u.size(); i++) {
             model.addRow(new Object[]{
@@ -205,8 +646,69 @@ public class AdmDashboard extends javax.swing.JFrame {
                 u.get(i).getNome(),
                 u.get(i).getEmail(),
                 u.get(i).getCpf(),
-                u.get(i).getTelefone(),
+                u.get(i).getTelefone(),});
+        }
+    }
+
+    public void getServicos() {
+        DefaultTableModel model = (DefaultTableModel) servicosTable.getModel();
+        model.setRowCount(0);
+        List<Servicos> s = Petshop.entityManager.createQuery("SELECT s FROM Servicos s").getResultList();
+        for (int i = 0; i < s.size(); i++) {
+            List<String> tipos = new ArrayList<>();
+            for (TiposAnimais tipo : s.get(i).getTiposAnimais()) {
+                tipos.add(tipo.getTipo());
+            }
+            model.addRow(new Object[]{
+                s.get(i).getId(),
+                s.get(i).getNome(),
+                s.get(i).getDescricao(),
+                s.get(i).getPreco(),
+                String.join(", ", tipos)
             });
+        }
+    }
+
+    public void getVendas() {
+        DefaultTableModel model = (DefaultTableModel) vendasTable.getModel();
+        model.setRowCount(0);
+        List<Vendas> v = Petshop.entityManager.createQuery("SELECT v FROM Vendas v").getResultList();
+        for (int i = 0; i < v.size(); i++) {
+            model.addRow(new Object[]{
+                v.get(i).getId(),
+                v.get(i).getDataVenda().toString(),
+                v.get(i).getCliente().getNome(),
+                v.get(i).getAnimal().getNome(),
+                v.get(i).getStatus().toString(),
+                v.get(i).getTotal()
+            });
+        }
+    }
+
+    public void getAnimals() {
+        DefaultTableModel model = (DefaultTableModel) animaisTable.getModel();
+        model.setRowCount(0);
+        List<Animais> a = Petshop.entityManager.createQuery("SELECT a FROM Animais a").getResultList();
+        for (int i = 0; i < a.size(); i++) {
+            model.addRow(new Object[]{
+                a.get(i).getId(),
+                a.get(i).getNome(),
+                a.get(i).getTamanho(),
+                a.get(i).getPeso(),
+                a.get(i).getIdade(),
+                a.get(i).getTipo().getTipo(),
+                a.get(i).getCliente().getNome(),});
+        }
+    }
+
+    public void getAnimalsTypes() {
+        DefaultTableModel model = (DefaultTableModel) tiposTable.getModel();
+        model.setRowCount(0);
+        List<TiposAnimais> ta = Petshop.entityManager.createQuery("SELECT ta FROM TiposAnimais ta").getResultList();
+        for (int i = 0; i < ta.size(); i++) {
+            model.addRow(new Object[]{
+                ta.get(i).getId(),
+                ta.get(i).getTipo(),});
         }
     }
 
@@ -246,14 +748,32 @@ public class AdmDashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable animaisTable;
+    private javax.swing.JTabbedPane dashboard;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JButton serAddBtn;
+    private javax.swing.JTable servicosTable;
+    private javax.swing.JTable tiposTable;
     private javax.swing.JTable userTable;
+    private javax.swing.JTable vendasTable;
     // End of variables declaration//GEN-END:variables
 }

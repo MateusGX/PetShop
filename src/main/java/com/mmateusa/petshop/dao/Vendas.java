@@ -8,6 +8,7 @@ package com.mmateusa.petshop.dao;
 import javax.persistence.*;
 import com.mmateusa.petshop.dao.*;
 import com.mmateusa.petshop.utils.FormaPagamento;
+import com.mmateusa.petshop.utils.VendaStatus;
 import java.sql.Timestamp;
 /**
  *
@@ -22,13 +23,17 @@ public class Vendas {
     private int id;
     
     @Column
-    private Timestamp dataVenda;
+    @Enumerated(EnumType.STRING)
+    private VendaStatus status;
     
     @Column
+    private Timestamp dataVenda = new Timestamp(System.currentTimeMillis());
+    
+    @Column(nullable = true)
     @Enumerated(EnumType.STRING)
     private FormaPagamento formaPagamento;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, optional = true)
     private Usuarios funcionario;
     
     @ManyToOne(cascade = CascadeType.ALL)
@@ -37,30 +42,30 @@ public class Vendas {
     @ManyToOne(cascade = CascadeType.ALL)
     private Servicos servico;
     
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, optional = true)
     private Promocoes promocao;
     
     @ManyToOne(cascade = CascadeType.ALL)
     private Animais animal;
-     
-    @ManyToOne(cascade = CascadeType.ALL)
-    private TiposAnimais tipoAnimal;
 
+    @Column
+    private double total;
+    
     public Vendas() {
     }
-    
-    public Vendas(Timestamp dataVenda, FormaPagamento formaPagamento, Usuarios funcionario, Usuarios cliente, Servicos servico, Promocoes promocao, Animais animal, TiposAnimais tipoAnimal) {
-        this.dataVenda = dataVenda;
+
+    public Vendas(VendaStatus status, FormaPagamento formaPagamento, Usuarios funcionario, Usuarios cliente, Servicos servico, Promocoes promocao, Animais animal, double total) {
+        this.status = status;
         this.formaPagamento = formaPagamento;
         this.funcionario = funcionario;
         this.cliente = cliente;
         this.servico = servico;
         this.promocao = promocao;
         this.animal = animal;
-        this.tipoAnimal = tipoAnimal;
+        this.total = total;
     }
 
-    public Vendas(int id, Timestamp dataVenda, FormaPagamento formaPagamento, Usuarios funcionario, Usuarios cliente, Servicos servico, Promocoes promocao, Animais animal, TiposAnimais tipoAnimal) {
+    public Vendas(int id, Timestamp dataVenda, FormaPagamento formaPagamento, Usuarios funcionario, Usuarios cliente, Servicos servico, Promocoes promocao, Animais animal, double total) {
         this.id = id;
         this.dataVenda = dataVenda;
         this.formaPagamento = formaPagamento;
@@ -69,7 +74,7 @@ public class Vendas {
         this.servico = servico;
         this.promocao = promocao;
         this.animal = animal;
-        this.tipoAnimal = tipoAnimal;
+        this.total = total;
     }
 
     public int getId() {
@@ -136,11 +141,20 @@ public class Vendas {
         this.animal = animal;
     }
 
-    public TiposAnimais getTipoAnimal() {
-        return tipoAnimal;
+    public VendaStatus getStatus() {
+        return status;
     }
 
-    public void setTipoAnimal(TiposAnimais tipoAnimal) {
-        this.tipoAnimal = tipoAnimal;
+    public void setStatus(VendaStatus status) {
+        this.status = status;
     }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+    
 }
